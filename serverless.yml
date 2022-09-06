@@ -1,0 +1,23 @@
+service: aws-node-http-api-project
+frameworkVersion: "3"
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+  api:
+    handler: handler.api
+    events:
+      - httpApi:
+          path: /{routeName}
+          method: "*"
