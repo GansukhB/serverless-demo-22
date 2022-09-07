@@ -7,6 +7,12 @@ plugins:
 provider:
   name: aws
   runtime: nodejs14.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource:
+        { "Fn::Join": ["", ["arn:aws:s3:::test-bucket-leap2022", "/*"]] }
 
 functions:
   hello:
@@ -21,3 +27,21 @@ functions:
       - httpApi:
           path: /{routeName}
           method: "*"
+  upload:
+    handler: handler.getPresignedUrl
+    events:
+      - httpApi:
+          path: /getPresignedUrl
+          method: "GET"
+
+resources:
+  Resources:
+    DemoBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: test-bucket-leap2022
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
