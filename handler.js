@@ -49,41 +49,42 @@ const processTest = async (event) => {
   };
 };
 module.exports.getPresignedUrl = async (event) => {
-  const s3 = new AWS.S3();
   AWS.config.update({
-    accessKeyId: "",
-    secretAccessKey: "",
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: "us-east-1",
     signatureVersion: "v4",
   });
+  const s3 = new AWS.S3();
 
   // Tried with and without this. Since s3 is not region-specific, I don't
   // think it should be necessary.
   // AWS.config.update({region: 'us-west-2'})
 
   const myBucket = "test-bucket-leap2022";
-  const myKey = "file-name33.pdf";
-  const signedUrlExpireSeconds = 300;
+  const myKey = "file-name.pdf";
+  const signedUrlExpireSeconds = 3000;
 
-  const url = s3.getSignedUrl("putObject", {
+  const url = await s3.getSignedUrlPromise("putObject", {
     Bucket: myBucket,
     Key: myKey,
     Expires: signedUrlExpireSeconds,
-    ContentType: "image/png",
+    //ContentType: "image/*",
   });
+  console.log(url);
 
-  const geturl = await s3
-    .getSignedUrl("getObject", {
-      Bucket: myBucket,
-      Key: myKey,
-      Expires: signedUrlExpireSeconds,
-      //ContentType: "image/png",
-    })
-    .promise();
+  // const geturl = await s3
+  //   .getSignedUrl("getObject", {
+  //     Bucket: myBucket,
+  //     Key: myKey,
+  //     Expires: signedUrlExpireSeconds,
+  //     //ContentType: "image/png",
+  //   })
+  //   .promise();
   return {
     statusCode: 200,
     body: JSON.stringify({
-      getUrl: geturl,
+      getUrl: url,
     }),
   };
 };
