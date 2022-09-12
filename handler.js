@@ -1,5 +1,31 @@
 "use strict";
 const AWS = require("aws-sdk");
+const dynamoose = require("dynamoose");
+const { Person, PersonTable } = require("./model/Person");
+
+module.exports.dynamo = async (event) => {
+  const ddb = new dynamoose.aws.ddb.DynamoDB({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: "us-east-1",
+  });
+  dynamoose.aws.ddb.set(ddb);
+  try {
+    await PersonTable.create();
+  } catch (e) {
+    console.log(e);
+  }
+  // await Person.create({
+  //   id: "asdfasdf",
+  //   name: "Bilguun",
+  //   age: 18,
+  // });
+  const person = await Person.query("id").eq("asdfasdf").exec();
+  return {
+    statusCode: 200,
+    body: JSON.stringify(person.toJSON()),
+  };
+};
 
 module.exports.hello = async (event) => {
   return {

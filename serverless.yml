@@ -21,6 +21,12 @@ provider:
         { "Fn::Join": ["", ["arn:aws:s3:::test-bucket-leap2022", "/*"]] }
 
 functions:
+  dynamo:
+    handler: handler.dynamo
+    events:
+      - httpApi:
+          path: /db
+          method: get
   hello:
     handler: handler.hello
     events:
