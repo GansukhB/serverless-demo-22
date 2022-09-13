@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "npx sls  offline start"
+  },
   "devDependencies": {
     "aws-sdk": "^2.1210.0",
     "serverless": "^3.22.0",

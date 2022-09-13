@@ -22,23 +22,23 @@ provider:
 
 functions:
   dynamo:
-    handler: handler.dynamo
+    handler: handler.controllers
     events:
       - httpApi:
-          path: /db
-          method: get
+          path: /{controller}/{id+}
+          method: "*"
   hello:
     handler: handler.hello
     events:
       - httpApi:
           path: /
           method: get
-  api:
-    handler: handler.api
-    events:
-      - httpApi:
-          path: /{routeName}
-          method: "*"
+  # api:
+  #   handler: handler.api
+  #   events:
+  #     - httpApi:
+  #         path: /{routeName}
+  #         method: "*"
   upload:
     handler: handler.getPresignedUrl
     events:
